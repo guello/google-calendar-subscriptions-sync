@@ -1,10 +1,10 @@
-[ci-badge]: https://github.com/gabrielecanepa/google-calendar-subscriptions-sync/actions/workflows/sync-subscriptions.yml/badge.svg
+[ci-badge]: https://github.com/guello/google-calendar-subscriptions-sync/actions/workflows/sync-subscriptions.yml/badge.svg
 
 # Google Calendar Subscriptions Sync
 
 ![sync-subscriptions][ci-badge]
 
-Collection of actions to sync calendar events using [Google Calendar Subscriptions](https://github.com/gabrielecanepa/google-calendar-subscriptions).
+Collection of actions to sync calendar events using [Google Calendar Subscriptions](https://github.com/guello/google-calendar-subscriptions).
 
 ## Installation
 

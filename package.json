@@ -1,10 +1,10 @@
 {
   "name": "google-calendar-subscriptions-sync",
   "version": "0.0.1",
-  "homepage": "https://github.com/gabrielecanepa/google-calendar-subscriptions-sync",
+  "homepage": "https://github.com/guello/google-calendar-subscriptions-sync",
   "repository": {
     "type": "git",
-    "url": "https://github.com/gabrielecanepa/google-calendar-subscriptions-sync.git"
+    "url": "https://github.com/guello/google-calendar-subscriptions-sync.git"
   },
   "license": "MIT",
   "engines": {
