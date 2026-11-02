@@ -88,3 +88,13 @@ Create a new calendar and insert the events from the subscriptions:
 ```sh
 pnpm action insert [subscriptions]
 ```
+
+## Failure alerts
+
+The [Sync Subscriptions](.github/workflows/sync-subscriptions.yml) workflow tolerates a failed sync at the job level, so a single transient error does not send a notification. Its errors stay visible in the run logs.
+
+The [Monitor](.github/workflows/monitor.yml) workflow runs after each completed sync run and every 15 minutes. It flags the sync workflow after consecutive unsuccessful runs, or when no run started or completed in the last 30 minutes. A successful run resets the count. The threshold defaults to 3. To change it, set the repository Actions variable `SYNC_FAILURE_THRESHOLD` to an integer from 1 to 100. Invalid values fail the monitor rather than disabling alerts.
+
+Each problem alerts once: the monitor fails only for problems that its previous run did not report, and logs ongoing problems as warnings. A problem that clears and returns alerts again. Failures of the monitor workflow send GitHub Actions failure notifications when you have enabled them in your GitHub notification settings.
+
+The Monitor workflow also runs a daily keep-alive job. GitHub disables scheduled workflows in public repositories after 60 days without activity, so the job adds an empty commit when the last commit is more than 50 days old.

@@ -8,6 +8,10 @@ on:
 jobs:
   sync-subscriptions:
     runs-on: ubuntu-latest
+    continue-on-error: true
+    timeout-minutes: 10
+    permissions:
+      contents: read
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
@@ -16,7 +20,8 @@ jobs:
           node-version-file: .node-version
           cache: pnpm
       - run: pnpm install
-      - run: pnpm sync
+      - name: Run sync-subscriptions
+        run: pnpm sync
         env:
           GC_CLIENT_EMAIL: ${{ secrets.GC_CLIENT_EMAIL }}
           GC_PRIVATE_KEY: ${{ secrets.GC_PRIVATE_KEY }}

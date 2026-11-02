@@ -1,0 +1,49 @@
+name: Monitor
+
+on:
+  workflow_run:
+    workflows: [Sync Subscriptions]
+    types: [completed]
+  schedule:
+    - cron: "*/15 * * * *"
+    - cron: "0 0 * * *"
+  workflow_dispatch:
+
+permissions: {}
+
+jobs:
+  monitor:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      actions: read
+      checks: read
+      contents: read
+    concurrency:
+      group: monitor
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v5
+      - name: Check sync health
+        run: node .github/scripts/monitor.mjs
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          SYNC_FAILURE_THRESHOLD: ${{ vars.SYNC_FAILURE_THRESHOLD }}
+
+  keep-alive:
+    if: github.event.schedule == '0 0 * * *' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v5
+      - name: Commit if the repository is inactive
+        run: |
+          days=$(( ($(date +%s) - $(git log -1 --format=%ct)) / 86400 ))
+          echo "Last commit is $days days ago"
+          if [ "$days" -le 50 ]; then exit 0; fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit --allow-empty -m "ci: keep alive workflow run"
+          git push
